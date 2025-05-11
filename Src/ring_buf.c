@@ -27,10 +27,9 @@
 
 #include <memory.h>
 
-static inline void ring_buf_clamp(ring_buf_size_t *clamp,
-                                  ring_buf_size_t limit) {
-  if (*clamp > limit)
-    *clamp = limit;
+static inline void ring_buf_clamp(ring_buf_size_t *clamp, ring_buf_size_t limit) {
+    if (*clamp > limit)
+        *clamp = limit;
 }
 
 /*!
@@ -38,125 +37,111 @@ static inline void ring_buf_clamp(ring_buf_size_t *clamp,
  * \details Used as the wrap size when claiming. The wrap size equals the head
  * relative to the base.
  */
-static inline ring_buf_size_t
-ring_buf_zone_head(const struct ring_buf_zone *zone) {
-  return zone->head - zone->base;
-}
+static inline ring_buf_size_t ring_buf_zone_head(const struct ring_buf_zone *zone) { return zone->head - zone->base; }
 
-static inline ring_buf_size_t
-ring_buf_zone_tail(const struct ring_buf_zone *zone) {
-  return zone->tail - zone->base;
-}
+static inline ring_buf_size_t ring_buf_zone_tail(const struct ring_buf_zone *zone) { return zone->tail - zone->base; }
 
-static inline ring_buf_size_t
-ring_buf_zone_claim(const struct ring_buf_zone *zone) {
-  return zone->head - zone->tail;
-}
+static inline ring_buf_size_t ring_buf_zone_claim(const struct ring_buf_zone *zone) { return zone->head - zone->tail; }
 
 void ring_buf_zone_reset(struct ring_buf_zone *zone, ring_buf_ptrdiff_t base) {
-  zone->base = zone->head = zone->tail = base;
+    zone->base = zone->head = zone->tail = base;
 }
 
 void ring_buf_reset(struct ring_buf *buf, ring_buf_ptrdiff_t base) {
-  ring_buf_zone_reset(&buf->put, base);
-  ring_buf_zone_reset(&buf->get, base);
+    ring_buf_zone_reset(&buf->put, base);
+    ring_buf_zone_reset(&buf->get, base);
 }
 
-ring_buf_size_t ring_buf_put_claim(struct ring_buf *buf, void **space,
-                                   ring_buf_size_t size) {
-  ring_buf_ptrdiff_t base = buf->put.base;
-  ring_buf_size_t head = ring_buf_zone_head(&buf->put);
-  if (head >= buf->size) {
-    base += buf->size;
-    head -= buf->size;
-  }
-  ring_buf_clamp(&size, buf->size - head);
-  ring_buf_clamp(&size, ring_buf_free_space(buf));
-  if (space)
-    *space = (uint8_t *)buf->space + (buf->put.head - base);
-  buf->put.head += size;
-  return size;
+ring_buf_size_t ring_buf_put_claim(struct ring_buf *buf, void **space, ring_buf_size_t size) {
+    ring_buf_ptrdiff_t base = buf->put.base;
+    ring_buf_size_t head = ring_buf_zone_head(&buf->put);
+    if (head >= buf->size) {
+        base += buf->size;
+        head -= buf->size;
+    }
+    ring_buf_clamp(&size, buf->size - head);
+    ring_buf_clamp(&size, ring_buf_free_space(buf));
+    if (space)
+        *space = (uint8_t *)buf->space + (buf->put.head - base);
+    buf->put.head += size;
+    return size;
 }
 
 int ring_buf_put_ack(struct ring_buf *buf, ring_buf_size_t size) {
-  ring_buf_size_t claim = ring_buf_zone_claim(&buf->put);
-  if (size > claim)
-    return -EINVAL;
-  buf->put.head = (buf->put.tail += size);
-  if (ring_buf_zone_tail(&buf->put) >= buf->size)
-    buf->put.base += buf->size;
-  return 0;
+    ring_buf_size_t claim = ring_buf_zone_claim(&buf->put);
+    if (size > claim)
+        return -EINVAL;
+    buf->put.head = (buf->put.tail += size);
+    if (ring_buf_zone_tail(&buf->put) >= buf->size)
+        buf->put.base += buf->size;
+    return 0;
 }
 
-ring_buf_size_t ring_buf_get_claim(struct ring_buf *buf, void **space,
-                                   ring_buf_size_t size) {
-  ring_buf_ptrdiff_t base = buf->get.base;
-  ring_buf_size_t head = ring_buf_zone_head(&buf->get);
-  if (head >= buf->size) {
-    base += buf->size;
-    head -= buf->size;
-  }
-  ring_buf_clamp(&size, buf->size - head);
-  ring_buf_clamp(&size, ring_buf_used_space(buf));
-  if (space)
-    *space = (uint8_t *)buf->space + (buf->get.head - base);
-  buf->get.head += size;
-  return size;
+ring_buf_size_t ring_buf_get_claim(struct ring_buf *buf, void **space, ring_buf_size_t size) {
+    ring_buf_ptrdiff_t base = buf->get.base;
+    ring_buf_size_t head = ring_buf_zone_head(&buf->get);
+    if (head >= buf->size) {
+        base += buf->size;
+        head -= buf->size;
+    }
+    ring_buf_clamp(&size, buf->size - head);
+    ring_buf_clamp(&size, ring_buf_used_space(buf));
+    if (space)
+        *space = (uint8_t *)buf->space + (buf->get.head - base);
+    buf->get.head += size;
+    return size;
 }
 
 int ring_buf_get_ack(struct ring_buf *buf, ring_buf_size_t size) {
-  ring_buf_size_t claim = ring_buf_zone_claim(&buf->get);
-  if (size > claim)
-    return -EINVAL;
-  buf->get.head = (buf->get.tail += size);
-  if (ring_buf_zone_tail(&buf->get) >= buf->size)
-    buf->get.base += buf->size;
-  return 0;
+    ring_buf_size_t claim = ring_buf_zone_claim(&buf->get);
+    if (size > claim)
+        return -EINVAL;
+    buf->get.head = (buf->get.tail += size);
+    if (ring_buf_zone_tail(&buf->get) >= buf->size)
+        buf->get.base += buf->size;
+    return 0;
 }
 
-ring_buf_size_t ring_buf_put(struct ring_buf *buf, const void *data,
-                             ring_buf_size_t size) {
-  ring_buf_size_t ack = 0U, claim;
-  do {
-    void *space;
-    claim = ring_buf_put_claim(buf, &space, size);
-    (void)memcpy(space, data, claim);
-    *(const uint8_t **)&data += claim;
-    ack += claim;
-  } while (claim && (size -= claim));
-  return ack;
+ring_buf_size_t ring_buf_put(struct ring_buf *buf, const void *data, ring_buf_size_t size) {
+    ring_buf_size_t ack = 0U, claim;
+    do {
+        void *space;
+        claim = ring_buf_put_claim(buf, &space, size);
+        (void)memcpy(space, data, claim);
+        *(const uint8_t **)&data += claim;
+        ack += claim;
+    } while (claim && (size -= claim));
+    return ack;
 }
 
-ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data,
-                             ring_buf_size_t size) {
-  ring_buf_size_t ack = 0U, claim;
-  do {
-    void *space;
-    claim = ring_buf_get_claim(buf, &space, size);
-    if (data) {
-      (void)memcpy(data, space, claim);
-      *(uint8_t **)&data += claim;
-    }
-    ack += claim;
-  } while (claim && (size -= claim));
-  return ack;
+ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data, ring_buf_size_t size) {
+    ring_buf_size_t ack = 0U, claim;
+    do {
+        void *space;
+        claim = ring_buf_get_claim(buf, &space, size);
+        if (data) {
+            (void)memcpy(data, space, claim);
+            *(uint8_t **)&data += claim;
+        }
+        ack += claim;
+    } while (claim && (size -= claim));
+    return ack;
 }
 
-int ring_buf_put_all(struct ring_buf *buf, const void *data,
-                     ring_buf_size_t size) {
-  ring_buf_size_t ack = ring_buf_put(buf, data, size);
-  int err = ack < size ? -EMSGSIZE : 0;
-  if (err < 0)
-    ack = 0U;
-  (void)ring_buf_put_ack(buf, ack);
-  return err;
+int ring_buf_put_all(struct ring_buf *buf, const void *data, ring_buf_size_t size) {
+    ring_buf_size_t ack = ring_buf_put(buf, data, size);
+    int err = ack < size ? -EMSGSIZE : 0;
+    if (err < 0)
+        ack = 0U;
+    (void)ring_buf_put_ack(buf, ack);
+    return err;
 }
 
 int ring_buf_get_all(struct ring_buf *buf, void *data, ring_buf_size_t size) {
-  ring_buf_size_t ack = ring_buf_get(buf, data, size);
-  int err = ack < size ? -EAGAIN : 0;
-  if (err < 0)
-    ack = 0U;
-  (void)ring_buf_get_ack(buf, ack);
-  return err;
+    ring_buf_size_t ack = ring_buf_get(buf, data, size);
+    int err = ack < size ? -EAGAIN : 0;
+    if (err < 0)
+        ack = 0U;
+    (void)ring_buf_get_ack(buf, ack);
+    return err;
 }
