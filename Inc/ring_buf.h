@@ -1,8 +1,7 @@
+/* SPDX-License-Identifier: MIT */
 /*!
  * \file ring_buf.h
  * \copyright Roy Ratcliffe, Northumberland, United Kingdom
- *
- * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge,  to any person obtaining a
  * copy  of  this  software  and    associated   documentation  files  (the
