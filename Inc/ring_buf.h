@@ -51,7 +51,7 @@ typedef size_t ring_buf_size_t;
  * \details This structure needs to exist within the header.
  */
 struct ring_buf_zone {
-  ring_buf_ptrdiff_t base, head, tail;
+    ring_buf_ptrdiff_t base, head, tail;
 };
 
 /*!
@@ -68,26 +68,20 @@ struct ring_buf_zone {
  * \brief Ring buffer instance.
  */
 struct ring_buf {
-  void *space;
-  ring_buf_size_t size;
-  struct ring_buf_zone put, get;
+    void *space;
+    ring_buf_size_t size;
+    struct ring_buf_zone put, get;
 };
 
-static inline ring_buf_size_t ring_buf_used_space(const struct ring_buf *buf) {
-  return buf->put.tail - buf->get.head;
-}
+static inline ring_buf_size_t ring_buf_used_space(const struct ring_buf *buf) { return buf->put.tail - buf->get.head; }
 
-static inline bool ring_buf_is_empty(const struct ring_buf *buf) {
-  return ring_buf_used_space(buf) == 0U;
-}
+static inline bool ring_buf_is_empty(const struct ring_buf *buf) { return ring_buf_used_space(buf) == 0U; }
 
 static inline ring_buf_size_t ring_buf_free_space(const struct ring_buf *buf) {
-  return buf->size - (buf->put.head - buf->get.tail);
+    return buf->size - (buf->put.head - buf->get.tail);
 }
 
-static inline bool ring_buf_is_full(const struct ring_buf *buf) {
-  return ring_buf_free_space(buf) == 0U;
-}
+static inline bool ring_buf_is_full(const struct ring_buf *buf) { return ring_buf_free_space(buf) == 0U; }
 
 void ring_buf_reset(struct ring_buf *buf, ring_buf_ptrdiff_t base);
 
@@ -103,8 +97,7 @@ void ring_buf_reset(struct ring_buf *buf, ring_buf_ptrdiff_t base);
  * One put operation starts with a claim. A successful claim expands the "put
  * zone" by the requested number of bytes.
  */
-ring_buf_size_t ring_buf_put_claim(struct ring_buf *buf, void **space,
-                                   ring_buf_size_t size);
+ring_buf_size_t ring_buf_put_claim(struct ring_buf *buf, void **space, ring_buf_size_t size);
 
 /*!
  * \brief Acknowledges space claimed for putting data into a ring buffer.
@@ -123,8 +116,7 @@ int ring_buf_put_ack(struct ring_buf *buf, ring_buf_size_t size);
  * \brief Claims contiguous space for getting.
  * \details Advances the "get" head.
  */
-ring_buf_size_t ring_buf_get_claim(struct ring_buf *buf, void **space,
-                                   ring_buf_size_t size);
+ring_buf_size_t ring_buf_get_claim(struct ring_buf *buf, void **space, ring_buf_size_t size);
 
 int ring_buf_get_ack(struct ring_buf *buf, ring_buf_size_t size);
 
@@ -148,8 +140,7 @@ int ring_buf_get_ack(struct ring_buf *buf, ring_buf_size_t size);
  * \param size Number of bytes to put.
  * \returns Buffer space to acknowledge in bytes.
  */
-ring_buf_size_t ring_buf_put(struct ring_buf *buf, const void *data,
-                             ring_buf_size_t size);
+ring_buf_size_t ring_buf_put(struct ring_buf *buf, const void *data, ring_buf_size_t size);
 
 /*!
  * \brief Gets data from a ring buffer.
@@ -158,14 +149,12 @@ ring_buf_size_t ring_buf_put(struct ring_buf *buf, const void *data,
  * \param size Number of bytes to get.
  * \returns Number of bytes to acknowledge.
  */
-ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data,
-                             ring_buf_size_t size);
+ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data, ring_buf_size_t size);
 
 /*!
  * \brief Puts all or none.
  */
-int ring_buf_put_all(struct ring_buf *buf, const void *data,
-                     ring_buf_size_t size);
+int ring_buf_put_all(struct ring_buf *buf, const void *data, ring_buf_size_t size);
 
 /*!
  * \brief Gets all or none.
@@ -178,10 +167,9 @@ int ring_buf_get_all(struct ring_buf *buf, void *data, ring_buf_size_t size);
 
 #include <stdint.h>
 
-#define RING_BUF_DEFINE(_name_, _size_)                                        \
-  static uint8_t _ring_buf_space_##_name_[_size_];                             \
-  static struct ring_buf _name_ = {.space = _ring_buf_space_##_name_,          \
-                                   .size = _size_}
+#define RING_BUF_DEFINE(_name_, _size_)                                                                                \
+    static uint8_t _ring_buf_space_##_name_[_size_];                                                                   \
+    static struct ring_buf _name_ = {.space = _ring_buf_space_##_name_, .size = _size_}
 
 /*!
  * \}
