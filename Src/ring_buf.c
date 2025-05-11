@@ -25,7 +25,7 @@
 
 #include "ring_buf.h"
 
-#include <memory.h>
+#include <string.h>
 
 static inline void ring_buf_clamp(ring_buf_size_t *clamp, ring_buf_size_t limit) {
     if (*clamp > limit)
