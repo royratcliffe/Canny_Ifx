@@ -25,6 +25,9 @@
 
 #include "ring_buf.h"
 
+/*
+ * for memcpy
+ */
 #include <string.h>
 
 static inline void ring_buf_clamp(ring_buf_size_t *clamp, ring_buf_size_t limit) {

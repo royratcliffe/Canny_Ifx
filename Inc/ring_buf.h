@@ -175,6 +175,9 @@ int ring_buf_get_all(struct ring_buf *buf, void *data, ring_buf_size_t size);
  * \}
  */
 
+/*
+ * for uint8_t
+ */
 #include <stdint.h>
 
 /*!
