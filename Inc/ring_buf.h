@@ -31,8 +31,18 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 
+/*
+ * Some embedded kits do not define `EMSGSIZE`, the "message too long"
+ * error code. The standard C `<errno.h>` header normally defines it. The
+ * value is not consistent across operating systems. Its value may be 90,
+ * 122, or some other high value. The actual value matters for error number
+ * to error string conversions. The value cannot be any integer value. It
+ * must map to a valid error string. Consequently, deal with a missing
+ * error define by mapping the error to another existing error that carries
+ * a similar meaning.
+ */
 #ifndef EMSGSIZE
-#define EMSGSIZE 90
+#define EMSGSIZE ENOMEM
 #endif
 
 typedef ptrdiff_t ring_buf_ptrdiff_t;
