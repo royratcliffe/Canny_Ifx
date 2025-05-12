@@ -24,10 +24,6 @@
 #define STRINGIFY(x) #x
 #endif
 
-/*!
- * \defgroup CCTC TASKING Compiler
- * \{
- */
 #ifdef __TASKING__
 
 /*!
@@ -51,8 +47,5 @@
     } while (0)
 
 #endif /* __TASKING__ */
-/*!
- * \}
- */
 
 #endif /* CANNY_IFX_INC_WHEN_H_ */
