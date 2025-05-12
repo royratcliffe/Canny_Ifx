@@ -20,13 +20,13 @@
 #ifndef LIBRARIES_CANNY_IFX_INC_WHEN_H_
 #define LIBRARIES_CANNY_IFX_INC_WHEN_H_
 
-#ifndef STRINGIZE
-#define STRINGIZE(x) #x
+#ifndef STRINGIFY
+#define STRINGIFY(x) #x
 #endif
 
 #define WHEN_CALL(_when_, _call_)                                                                                      \
     static void _call_(void *with);                                                                                    \
-    __attribute__((section(STRINGIZE(when_##_when_)), used)) static void (*const __when__##_call_)(void *with) = &_call_
+    __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_call_)(void *with) = &_call_
 
 #ifdef __TASKING__
 #define WHEN_WITH(_when_, _with_)                                                                                      \
