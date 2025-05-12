@@ -31,9 +31,9 @@
 #ifdef __TASKING__
 #define WHEN_WITH(_when_, _with_)                                                                                      \
     {                                                                                                                  \
-        extern const void (*const _lc_ub_##when_##_when_[])(void *with);                                               \
-        extern const void (*const _lc_ue_##when_##_when_[])(void *with);                                               \
-        for (void const (*const *call)(void *when) = _lc_ub_##when_##_when_; call < _lc_ue_##when_##_when_; call++) {  \
+        extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
+        extern void (*const _lc_ue_##when_##_when_[])(void *with);                                                     \
+        for (void (*const *call)(void *when) = _lc_ub_##when_##_when_; call < _lc_ue_##when_##_when_; call++) {        \
             (**call)(_with_);                                                                                          \
         }                                                                                                              \
     }
