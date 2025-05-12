@@ -27,8 +27,6 @@
 #define STRINGIFY(x) #x
 #endif
 
-#ifdef __TASKING__
-
 /*!
  * \brief Whenever something happens, do what.
  */
@@ -40,6 +38,7 @@
 /*!
  * \brief When something happened, do something with it.
  */
+#ifdef __TASKING__
 #define WHEN_WITH(_when_, _with_)                                                                                      \
     do {                                                                                                               \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
@@ -48,7 +47,6 @@
             (**what)(_with_);                                                                                          \
         }                                                                                                              \
     } while (0)
-
 #endif /* __TASKING__ */
 
 #endif /* CANNY_IFX_INC_WHEN_H_ */
