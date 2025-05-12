@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT */
-/**********************************************************************************************************************
+/*!
  * \file when.h
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
  *
@@ -15,7 +15,7 @@
  * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *********************************************************************************************************************/
+ */
 
 #ifndef LIBRARIES_CANNY_IFX_INC_WHEN_H_
 #define LIBRARIES_CANNY_IFX_INC_WHEN_H_
