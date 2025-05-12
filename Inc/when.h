@@ -30,13 +30,14 @@
 
 #ifdef __TASKING__
 #define WHEN_WITH(_when_, _with_)                                                                                      \
-    {                                                                                                                  \
+    do {                                                                                                               \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
         extern void (*const _lc_ue_##when_##_when_[])(void *with);                                                     \
         for (void (*const *what)(void *when) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) {        \
             (**what)(_with_);                                                                                          \
         }                                                                                                              \
-    }
+    } while (0)
+
 #endif /* __TASKING__ */
 
 #endif /* LIBRARIES_CANNY_IFX_INC_WHEN_H_ */
