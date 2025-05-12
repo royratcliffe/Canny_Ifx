@@ -1,6 +1,9 @@
 /* SPDX-License-Identifier: MIT */
 /*!
  * \file when.h
+ * \details Fairly advanced C preprocessor macros used for modular
+ * registration in a callback framework that utilises an automatic
+ * *compile-time* registration mechanism for embedded architectures.
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
