@@ -24,17 +24,17 @@
 #define STRINGIFY(x) #x
 #endif
 
-#define WHEN_CALL(_when_, _call_)                                                                                      \
-    static void _call_(void *with);                                                                                    \
-    __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_call_)(void *with) = &_call_
+#define WHEN_WHAT(_when_, _what_)                                                                                      \
+    static void _what_(void *with);                                                                                    \
+    __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with) = &_what_
 
 #ifdef __TASKING__
 #define WHEN_WITH(_when_, _with_)                                                                                      \
     {                                                                                                                  \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
         extern void (*const _lc_ue_##when_##_when_[])(void *with);                                                     \
-        for (void (*const *call)(void *when) = _lc_ub_##when_##_when_; call < _lc_ue_##when_##_when_; call++) {        \
-            (**call)(_with_);                                                                                          \
+        for (void (*const *what)(void *when) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) {        \
+            (**what)(_with_);                                                                                          \
         }                                                                                                              \
     }
 #endif /* __TASKING__ */
