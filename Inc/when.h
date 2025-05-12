@@ -24,11 +24,22 @@
 #define STRINGIFY(x) #x
 #endif
 
+/*!
+ * \defgroup CCTC TASKING Compiler
+ * \{
+ */
+#ifdef __TASKING__
+
+/*!
+ * \brief Whenever something happens, do what.
+ */
 #define WHEN_WHAT(_when_, _what_)                                                                                      \
     static void _what_(void *with);                                                                                    \
     __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with) = &_what_
 
-#ifdef __TASKING__
+/*!
+ * \brief When something happened, do something with it.
+ */
 #define WHEN_WITH(_when_, _with_)                                                                                      \
     do {                                                                                                               \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
@@ -39,5 +50,8 @@
     } while (0)
 
 #endif /* __TASKING__ */
+/*!
+ * \}
+ */
 
 #endif /* LIBRARIES_CANNY_IFX_INC_WHEN_H_ */
