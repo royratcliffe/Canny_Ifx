@@ -34,6 +34,7 @@
  * \brief Whenever something happens, do what.
  */
 #define WHEN_WHAT(_when_, _what_)                                                                                      \
+    static inline void _when_##_with(void *with) { WHEN_WITH(_when_, with); }                                          \
     static void _what_(void *with);                                                                                    \
     __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with) = &_what_
 
