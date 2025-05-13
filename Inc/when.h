@@ -38,7 +38,7 @@
 /*!
  * \brief When something happened, do something with it.
  */
-#ifdef __TASKING__
+#if defined(__TASKING__)
 #define WHEN_WITH(_when_, _with_)                                                                                      \
     do {                                                                                                               \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                                     \
@@ -47,6 +47,15 @@
             (**what)(_with_);                                                                                          \
         }                                                                                                              \
     } while (0)
-#endif /* __TASKING__ */
+#elif defined(__GNUC__)
+#define WHEN_WITH(_when_, _with_)                                                                                      \
+    do {                                                                                                               \
+        extern void (*const _start_##when_##_when_[])(void *with) __attribute__((weak));                               \
+        extern void (*const _stop_##when_##_when_[])(void *with) __attribute__((weak));                                \
+        for (void (*const *what)(void *when) = _start_##when_##_when_; what < _stop_##when_##_when_; what++) {         \
+            (**what)(_with_);                                                                                          \
+        }                                                                                                              \
+    } while (0)
+#endif /* __TASKING__ || __GNUC__ */
 
 #endif /* CANNY_IFX_INC_WHEN_H_ */
