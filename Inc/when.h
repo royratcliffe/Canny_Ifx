@@ -25,10 +25,9 @@
 
 /*!
  * \brief Converts the macro argument into a string literal.
- *
- * This macro takes its argument and converts it into a string literal.
- * It is commonly used in preprocessor directives or attributes where
- * the C code requires the string-ifying of some arbitrary token.
+ * \details This macro takes its argument and converts it into a string literal.
+ * It is commonly used in preprocessor directives or attributes where the C code
+ * requires the string-ifying of some arbitrary token.
  *
  * Take an example:
  * \code
