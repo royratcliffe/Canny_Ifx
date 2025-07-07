@@ -59,25 +59,21 @@
 
 /*!
  * \brief When something happened, do something with it.
- * \details This macro is used to define a function that will be called when a
- * specific event occurs. It allows the function to be registered in a specific
- * section of the binary, enabling it to be discovered and executed at runtime.
- * It is typically used in embedded systems or callback frameworks where modular
- * registration is required. This macro is designed to be used in a modular
- * callback framework where multiple functions can be registered to handle the
- * same event, allowing for flexible and extensible event handling.
+ * \details This macro defines a function that is called when a specific event occurs.
+ * It registers the function in a dedicated section of the binary, so the system can
+ * discover and execute it at runtime. Use this macro in modular callback frameworks
+ * to register multiple handlers for the same event, enabling flexible and extensible
+ * event handling.
  *
  * The implementation iterates over all registered callback functions for the
  * specified event and calls each one with the provided argument.
  *
- * The `_lc_ub_` and `_lc_ue_` prefixes are used to denote the start and end of
- * the callback function list for the specified event for the TASKING compiler.
- * The `extern` declarations ensure that the function pointers are visible
- * across translation units, allowing the linker to resolve them correctly.
+ * For the TASKING compiler, the `_lc_ub_` and `_lc_ue_` prefixes mark the start and
+ * end of the callback list for the event. The `extern` declarations make the function
+ * pointers visible across translation units for correct linker resolution.
  *
- * Similarly, the `__start_` and `__stop_` prefixes are used for the GCC
- * compiler to denote the start and end of the callback function list for the
- * specified event.
+ * For the GCC compiler, the `__start_` and `__stop_` prefixes mark the start and end
+ * of the callback list for the event.
  *
  * \param _when_ The name of the event that triggers the callback.
  * \param _with_ The argument to be passed to the callback function when the
