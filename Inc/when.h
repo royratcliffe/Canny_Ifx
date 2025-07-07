@@ -78,7 +78,7 @@
     {                                                                                                         \
         extern void (*const _lc_ub_##when_##_when_[])(void *with);                                            \
         extern void (*const _lc_ue_##when_##_when_[])(void *with);                                            \
-        for (void (*const *what)(void *when) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) \
+        for (void (*const *what)(void *with) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) \
         {                                                                                                     \
             (**what)(_with_);                                                                                 \
         }                                                                                                     \
@@ -89,7 +89,7 @@
     {                                                                                                          \
         extern void (*const __start_##when_##_when_[])(void *with) __attribute__((weak));                      \
         extern void (*const __stop_##when_##_when_[])(void *with) __attribute__((weak));                       \
-        for (void (*const *what)(void *when) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) \
+        for (void (*const *what)(void *with) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) \
         {                                                                                                      \
             (**what)(_with_);                                                                                  \
         }                                                                                                      \
