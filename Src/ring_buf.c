@@ -124,6 +124,11 @@ ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data, ring_buf_size_t s
         claim = ring_buf_get_claim(buf, &space, size);
         if (data) {
             (void)memcpy(data, space, claim);
+            /*
+             * Use type punning to avoid strict aliasing issues. Cast the data
+             * pointer to a uint8_t pointer for proper byte-wise access. This ensures
+             * safe manipulation of the data without violating strict aliasing rules.
+             */
             *(uint8_t **)&data += claim;
         }
         ack += claim;
