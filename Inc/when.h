@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: MIT */
 /*!
  * \file when.h
- * \details Fairly advanced C preprocessor macros used for modular
- * registration in a callback framework that utilises an automatic
- * *compile-time* registration mechanism for embedded architectures.
+ * \details Fairly advanced C preprocessor macros used for modular registration
+ * in a callback framework that utilises an automatic *compile-time*
+ * registration mechanism for embedded architectures.
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
+ * \author Roy Ratcliffe <roy@ratcliffe.me>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -44,6 +45,12 @@
 
 /*!
  * \brief Whenever something happens, do what.
+ * \details This macro defines a function that is called when a specific event
+ * occurs. It is used to register a callback function that will be executed when
+ * the specified event occurs. The function is placed in a specific section of
+ * the binary, allowing it to be discovered and executed at runtime.
+ * \param _when_ The name of the event that triggers the callback.
+ * \param _what_ The name of the function to be called when the event occurs.
  */
 #define WHEN_WHAT(_when_, _what_)                                                 \
     static inline void __##_when_##_with(void *with) { WHEN_WITH(_when_, with); } \
@@ -52,6 +59,18 @@
 
 /*!
  * \brief When something happened, do something with it.
+ * \details This macro is used to define a function that will be called when a
+ * specific event occurs. It allows the function to be registered in a specific
+ * section of the binary, enabling it to be discovered and executed at runtime.
+ * It is typically used in embedded systems or callback frameworks where modular
+ * registration is required.
+ * \param _when_ The name of the event that triggers the callback.
+ * \param _with_ The argument to be passed to the callback function when the
+ * event occurs.
+ * \note This macro is designed to work with compilers that support specific
+ * section attributes, such as the TASKING or GCC compilers. It uses weak
+ * symbols to allow for multiple definitions of the same function without
+ * causing linker errors.
  */
 #if defined(__TASKING__)
 #define WHEN_WITH(_when_, _with_)                                                                             \
