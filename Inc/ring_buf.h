@@ -47,6 +47,11 @@ extern "C" {
 
 typedef ptrdiff_t ring_buf_ptrdiff_t;
 
+/*!
+ * \brief Ring buffer size type.
+ * \details The ring buffer size type uses an unsigned integer to represent the
+ * size of the ring buffer.
+ */
 typedef size_t ring_buf_size_t;
 
 #define RING_BUF_SIZE_MAX ((ring_buf_size_t)PTRDIFF_MIN)
