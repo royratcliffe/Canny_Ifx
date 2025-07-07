@@ -63,7 +63,22 @@
  * specific event occurs. It allows the function to be registered in a specific
  * section of the binary, enabling it to be discovered and executed at runtime.
  * It is typically used in embedded systems or callback frameworks where modular
- * registration is required.
+ * registration is required. This macro is designed to be used in a modular
+ * callback framework where multiple functions can be registered to handle the
+ * same event, allowing for flexible and extensible event handling.
+ *
+ * The implementation iterates over all registered callback functions for the
+ * specified event and calls each one with the provided argument.
+ *
+ * The `_lc_ub_` and `_lc_ue_` prefixes are used to denote the start and end of
+ * the callback function list for the specified event for the TASKING compiler.
+ * The `extern` declarations ensure that the function pointers are visible
+ * across translation units, allowing the linker to resolve them correctly.
+ *
+ * Similarly, the `__start_` and `__stop_` prefixes are used for the GCC
+ * compiler to denote the start and end of the callback function list for the
+ * specified event.
+ *
  * \param _when_ The name of the event that triggers the callback.
  * \param _with_ The argument to be passed to the callback function when the
  * event occurs.
