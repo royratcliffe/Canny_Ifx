@@ -68,16 +68,16 @@
  * called dynamically or registered as callbacks, ensuring they remain in the
  * final binary.
  *
+ * The section name must be a valid C identifier without spaces or special
+ * characters. Choose a descriptive name that reflects the section’s purpose and
+ * follows project naming conventions. Section names group related functions or
+ * variables, aiding organisation and management in the binary. Ensure the
+ * section name is unique within the binary to prevent conflicts. Use
+ * underscores to separate words, following standard C naming practices. The
+ * linker uses the section name to place the item in the correct section and to
+ * prevent its removal during optimisation.
+ *
  * \param _section_ The name of the section where the function or variable should be placed.
- * The name of the section should be a valid identifier and should not contain spaces or special characters.
- * Ideally, it should be a descriptive name that indicates the purpose of the section.
- * It is recommended to use a name that follows the project's naming conventions.
- * The section name is used to group related functions or variables together,
- * making it easier to manage and locate them in the binary.
- * It should be unique within the context of the binary to avoid conflicts with other sections.
- * It should use C-style naming conventions, such as using underscores to separate words.
- * The section name is used by the linker to place the function or variable in the specified section
- * and to ensure that it is not removed during the linking process.
  * \note The section name is converted to a string literal using the STRINGIFY macro.
  */
 #define SECTION_USED(_section_) __attribute__((section(STRINGIFY(_section_)), used))
