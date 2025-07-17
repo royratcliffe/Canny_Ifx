@@ -4,6 +4,39 @@
  * \brief Low-level C library definitions.
  * \details This header file contains definitions for low-level C library
  * functionalities.
+ *
+ * This file provides macros for used-section attributes,
+ * and section management. It is designed to be included in C source files
+ * to facilitate low-level programming tasks.
+ *
+ * Example usage:
+ *
+ * \code
+ * #include "lc.h"
+ *
+ * // The following lines declare the start and end of a section named "hello".
+ * // These macros are used to define the boundaries of a section in memory.
+ * extern const char START_OF_SECTION(hello)[];
+ * extern const char END_OF_SECTION(hello)[];
+ *
+ * // The line below places the `hello` variable in a section named "hello"
+ * // and marks it as used, preventing the linker from removing it.
+ * // It defines a section named "hello" and marks it as used.
+ * // This section can contain strings or other data that will not be
+ * // optimized away by the linker.
+ * SECTION_USED(hello) static char hello[] = "hello";
+ *
+ * // To access the section, you can use the START_OF_SECTION and END_OF_SECTION macros.
+ * // These macros provide pointers to the start and end of the section,
+ * // allowing you to iterate over the contents of the section.
+ * // The loop below iterates over the strings in the "hello" section.
+ * for (const char *str = START_OF_SECTION(hello); str < END_OF_SECTION(hello); str++)
+ * {
+ *     size_t len = strlen(str);
+ *     str += len;
+ * }
+ * \endcode
+ *
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
  * \author Roy Ratcliffe <roy@ratcliffe.me>
  *
