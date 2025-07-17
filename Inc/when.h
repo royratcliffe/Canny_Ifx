@@ -24,24 +24,7 @@
 #ifndef CANNY_IFX_INC_WHEN_H_
 #define CANNY_IFX_INC_WHEN_H_
 
-/*!
- * \brief Converts the macro argument into a string literal.
- * \details This macro takes its argument and converts it into a string literal.
- * It is commonly used in preprocessor directives or attributes where the C code
- * requires the string-ifying of some arbitrary token.
- *
- * Take an example:
- * \code
- * #define VERSION 1.0
- * // the following will expand to "1.0"
- * const char *version_string = STRINGIFY(VERSION);
- * \endcode
- *
- * \param x The token or value to be converted to a string literal.
- */
-#ifndef STRINGIFY
-#define STRINGIFY(x) #x
-#endif
+#include "stringify.h"
 
 /*!
  * \brief Whenever something happens, do what.
