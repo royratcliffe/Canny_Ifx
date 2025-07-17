@@ -24,7 +24,7 @@
  * // It defines a section named "hello" and marks it as used.
  * // This section can contain strings or other data that will not be
  * // optimized away by the linker.
- * static char hello[] SECTION_USED(hello) = "hello";
+ * static const char hello[] SECTION_USED(hello) = "hello";
  *
  * // To access the section, you can use the START_OF_SECTION and END_OF_SECTION macros.
  * // These macros provide pointers to the start and end of the section,
