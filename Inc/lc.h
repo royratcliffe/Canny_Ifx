@@ -110,6 +110,7 @@
  * \param _section_ The name of the section.
  * \note The end of section is used to determine the range of the section
  * and is typically used in conjunction with the start of section macro.
+ * \sa START_OF_SECTION
  */
 #if defined(__TASKING__)
 #define END_OF_SECTION(_section_) _lc_ue_##_section_
