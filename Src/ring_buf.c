@@ -133,6 +133,11 @@ ring_buf_size_t ring_buf_get(struct ring_buf *buf, void *data, ring_buf_size_t s
         }
         ack += claim;
     } while (claim && (size -= claim));
+    /*
+     * If the ring buffer is empty, then the claim size is zero. The acknowledge size
+     * is also zero. The acknowledge size is the amount of data that the caller has
+     * successfully read from the ring buffer.
+     */
     return ack;
 }
 
