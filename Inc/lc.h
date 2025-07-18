@@ -87,6 +87,11 @@
  * \details This macro marks the start of a section for the specified
  * section name.
  *
+ * The purpose of this macro is to provide a compiler-independent way to define
+ * the start of a section in the binary. It is typically used in conjunction
+ * with the end of section macro to allow for iteration over the contents of the
+ * section.
+ *
  * \param _section_ The name of the section.
  * \note The start of section is used to determine the range of the section
  * and is typically used in conjunction with the end of section macro.
