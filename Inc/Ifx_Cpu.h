@@ -1,7 +1,8 @@
 /* SPDX-License-Identifier: MIT */
 /*!
  * \file Ifx_CPU.h
- *
+ * \details This header file provides definitions and functions for
+ * accessing the CPU core address in the Infineon AURIX microcontroller.
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
  * \author Roy Ratcliffe <roy@ratcliffe.me>
  *
