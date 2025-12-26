@@ -22,6 +22,8 @@
 #define SAC_SCALAR_TYPE double
 #endif
 
+typedef SAC_SCALAR_TYPE sac_scalar_t;
+
 /*!
  * \brief Size type used for counting elements in the statistical accumulator.
  * \details Defines the size type used for counting elements in the SAC module.
@@ -30,6 +32,8 @@
 #ifndef SAC_SIZE_TYPE
 #define SAC_SIZE_TYPE size_t
 #endif
+
+typedef SAC_SIZE_TYPE sac_size_t;
 
 /*!
  * \brief Quiet Not a Number (NaN) constant.
@@ -111,31 +115,31 @@ struct statistical_accumulator {
      * \details This member keeps track of the number of values that have been
      * added to the accumulator.
      */
-    SAC_SIZE_TYPE n; /* n */
+    sac_size_t n; /* n */
     /*!
      * \brief Sum of values added to the accumulator.
      * \details This member holds the cumulative sum of all values added to
      * the accumulator.
      */
-    SAC_SCALAR_TYPE sigmaX; /* sum of x */
+    sac_scalar_t sigmaX; /* sum of x */
     /*!
      * \brief Sum of squares of values added to the accumulator.
      * \details This member holds the cumulative sum of the squares of all values added to
      * the accumulator.
      */
-    SAC_SCALAR_TYPE sigmaX2; /* sum of x * x */
+    sac_scalar_t sigmaX2; /* sum of x * x */
     /*!
      * \brief Minimum value encountered.
      * \details This member holds the minimum value that has been added to
      * the accumulator.
      */
-    SAC_SCALAR_TYPE min; /* minimum of x */
+    sac_scalar_t min; /* minimum of x */
     /*!
      * \brief Maximum value encountered.
      * \details This member holds the maximum value that has been added to
      * the accumulator.
      */
-    SAC_SCALAR_TYPE max; /* maximum of x */
+    sac_scalar_t max; /* maximum of x */
 };
 
 /*!
@@ -146,7 +150,7 @@ struct statistical_accumulator {
  * \param x Value to add to the accumulator.
  * \return Pointer to the updated statistical accumulator structure.
  */
-static inline struct statistical_accumulator *sac_add(struct statistical_accumulator *sac, SAC_SCALAR_TYPE x) {
+static inline struct statistical_accumulator *sac_add(struct statistical_accumulator *sac, sac_scalar_t x) {
     // Update the counter, the sum of X, the sum of X squared, and the
     // minimum and maximum values.
     sac->sigmaX += x;
@@ -177,7 +181,7 @@ static inline struct statistical_accumulator *sac_add(struct statistical_accumul
  * \param x Value to subtract from the accumulator.
  * \return Pointer to the updated statistical accumulator structure.
  */
-static inline struct statistical_accumulator *sac_sub(struct statistical_accumulator *sac, SAC_SCALAR_TYPE x) {
+static inline struct statistical_accumulator *sac_sub(struct statistical_accumulator *sac, sac_scalar_t x) {
     if (sac->n) {
         --sac->n;
         sac->sigmaX -= x;
@@ -212,7 +216,7 @@ static inline struct statistical_accumulator *sac_clear(struct statistical_accum
  * \param sac Pointer to statistical accumulator structure, immutable.
  * \return Count of values in the accumulator.
  */
-static inline SAC_SIZE_TYPE sac_count(const struct statistical_accumulator *sac) { return sac->n; }
+static inline sac_size_t sac_count(const struct statistical_accumulator *sac) { return sac->n; }
 
 /*!
  * \brief Computes the average of values in the statistical accumulator.
@@ -222,8 +226,8 @@ static inline SAC_SIZE_TYPE sac_count(const struct statistical_accumulator *sac)
  * \return Average of values in the accumulator, or SAC_NAN if no values.
  * \note Returns SAC_NAN if no values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_avg(const struct statistical_accumulator *sac) {
-    const SAC_SIZE_TYPE n = sac->n;
+static inline sac_scalar_t sac_avg(const struct statistical_accumulator *sac) {
+    const sac_size_t n = sac->n;
     if (n == 0)
         return SAC_NAN;
     return sac->sigmaX / n;
@@ -240,11 +244,11 @@ static inline SAC_SCALAR_TYPE sac_avg(const struct statistical_accumulator *sac)
  * fewer than two values.
  * \note Returns SAC_NAN if fewer than two values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_st_dev(const struct statistical_accumulator *sac) {
-    const SAC_SIZE_TYPE n = sac->n;
+static inline sac_scalar_t sac_st_dev(const struct statistical_accumulator *sac) {
+    const sac_size_t n = sac->n;
     if (n < 2)
         return SAC_NAN;
-    const SAC_SCALAR_TYPE sigmaX = sac->sigmaX;
+    const sac_scalar_t sigmaX = sac->sigmaX;
     return SAC_SQRT((sac->n * sac->sigmaX2 - sigmaX * sigmaX) / (n * (n - 1)));
 }
 
@@ -259,11 +263,11 @@ static inline SAC_SCALAR_TYPE sac_st_dev(const struct statistical_accumulator *s
  * no values.
  * \note Returns SAC_NAN if no values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_st_dev_p(const struct statistical_accumulator *sac) {
-    const SAC_SIZE_TYPE n = sac->n;
+static inline sac_scalar_t sac_st_dev_p(const struct statistical_accumulator *sac) {
+    const sac_size_t n = sac->n;
     if (n < 1)
         return SAC_NAN;
-    const SAC_SCALAR_TYPE sigmaX = sac->sigmaX;
+    const sac_scalar_t sigmaX = sac->sigmaX;
     return SAC_SQRT((n * sac->sigmaX2 - sigmaX * sigmaX) / (n * n));
 }
 
@@ -277,11 +281,11 @@ static inline SAC_SCALAR_TYPE sac_st_dev_p(const struct statistical_accumulator 
  * \return Population variance of values in the accumulator, or SAC_NAN if no values.
  * \note Returns SAC_NAN if no values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_var(const struct statistical_accumulator *sac) {
-    const SAC_SIZE_TYPE n = sac->n;
+static inline sac_scalar_t sac_var(const struct statistical_accumulator *sac) {
+    const sac_size_t n = sac->n;
     if (n < 1)
         return SAC_NAN;
-    const SAC_SCALAR_TYPE sigmaX = sac->sigmaX;
+    const sac_scalar_t sigmaX = sac->sigmaX;
     return (n * sac->sigmaX2 - sigmaX * sigmaX) / (n * n);
 }
 
@@ -293,7 +297,7 @@ static inline SAC_SCALAR_TYPE sac_var(const struct statistical_accumulator *sac)
  * \return Minimum value in the accumulator, or SAC_NAN if no values.
  * \note Returns SAC_NAN if no values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_min(const struct statistical_accumulator *sac) {
+static inline sac_scalar_t sac_min(const struct statistical_accumulator *sac) {
     if (sac->n == 0)
         return SAC_NAN;
     return sac->min;
@@ -307,7 +311,7 @@ static inline SAC_SCALAR_TYPE sac_min(const struct statistical_accumulator *sac)
  * \return Maximum value in the accumulator, or SAC_NAN if no values.
  * \note Returns SAC_NAN if no values have been added to the accumulator.
  */
-static inline SAC_SCALAR_TYPE sac_max(const struct statistical_accumulator *sac) {
+static inline sac_scalar_t sac_max(const struct statistical_accumulator *sac) {
     if (sac->n == 0)
         return SAC_NAN;
     return sac->max;
