@@ -1,11 +1,14 @@
 /* SPDX-License-Identifier: MIT */
 /*!
- * \file compare_float.c
+ * \file Ifx_CPU.h
+ * \details This header file provides definitions and functions for
+ * accessing the CPU core address in the Infineon AURIX microcontroller.
  * \copyright 2025, Roy Ratcliffe, Northumberland, United Kingdom
+ * \author Roy Ratcliffe <roy@ratcliffe.me>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sub-license, and/or sell copies of the Software, and to
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  *      The above copyright notice and this permission notice shall be included in all copies or substantial
@@ -17,34 +20,22 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "compare_float.h"
+#ifndef CANNY_IFX_INC_IFX_CPU_H_
+#define CANNY_IFX_INC_IFX_CPU_H_
 
-#include <float.h>
-#include <math.h>
+#include "IfxCpu.h"
 
-int compare_float(const void *left, const void *right)
-{
-    float lhs = *(const float *)left, rhs = *(const float *)right;
-    if (isnan(lhs))
-        return isnan(rhs) ? 0 : -1;
-    if (isnan(rhs))
-        return 1;
-    if (lhs < rhs)
-        return -1;
-    if (rhs < lhs)
-        return 1;
-    return 0;
-}
+/*!
+ * \brief Get the core address.
+ * \details This function retrieves and caches the address of the current CPU
+ * core. This is useful for accessing core-specific registers and memory. It
+ * ensures that the address is only fetched once, improving performance by
+ * avoiding repeated calls to IfxCpu_getAddress. This function is typically used
+ * in scenarios where the core address is needed multiple times, such as in
+ * interrupt handlers or critical sections.
+ *
+ * \return Pointer to the current CPU core structure.
+ */
+Ifx_CPU *IfxCpu_getCoreAddress(void);
 
-int compare_float_epsilon(const void *left, const void *right)
-{
-    float lhs = *(const float *)left, rhs = *(const float *)right;
-    if (isnan(lhs))
-        return isnan(rhs) ? 0 : -1;
-    if (isnan(rhs))
-        return 1;
-    float delta = lhs - rhs;
-    if (fabsf(delta) < FLT_EPSILON)
-        return 0;
-    return delta < 0.0F ? -1 : 1;
-}
+#endif /* CANNY_IFX_INC_IFX_CPU_H_ */
