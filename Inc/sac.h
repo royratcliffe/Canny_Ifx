@@ -5,6 +5,7 @@
  * \details This header file defines a statistical accumulator structure and
  * associated functions for computing basic statistics such as count, average,
  * standard deviation, minimum, and maximum in an online manner.
+ * \copyright 2000-2025, Roy Ratcliffe, Northumberland, United Kingdom
  */
 
 #ifndef SAC_H
