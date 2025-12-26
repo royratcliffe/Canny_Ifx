@@ -18,22 +18,22 @@
  * \details Defines the scalar type used for statistical calculations in the SAC module.
  * This can be overridden to use a different floating-point type.
  */
-#ifndef SAC_SCALAR_TYPE
-#define SAC_SCALAR_TYPE double
+#ifndef SAC_SCALAR_T
+#define SAC_SCALAR_T double
 #endif
 
-typedef SAC_SCALAR_TYPE sac_scalar_t;
+typedef SAC_SCALAR_T sac_scalar_t;
 
 /*!
  * \brief Size type used for counting elements in the statistical accumulator.
  * \details Defines the size type used for counting elements in the SAC module.
  * This can be overridden to use a different size type.
  */
-#ifndef SAC_SIZE_TYPE
-#define SAC_SIZE_TYPE size_t
+#ifndef SAC_SIZE_T
+#define SAC_SIZE_T size_t
 #endif
 
-typedef SAC_SIZE_TYPE sac_size_t;
+typedef SAC_SIZE_T sac_size_t;
 
 /*!
  * \brief Quiet Not a Number (NaN) constant.
