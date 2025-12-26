@@ -103,10 +103,10 @@ typedef SAC_SIZE_T sac_size_t;
  *         SAC_SCALAR_TYPE sac_min() const
  *         SAC_SCALAR_TYPE sac_max() const
  *
- * The first three modify the state of an accumulator.  The other member functions
+ * The first three modify the state of an accumulator. The other member functions
  * access the statistical information.
  *
- * Accumulator objects do not throw exceptions.  The quiet SAC_NaN
+ * Accumulator objects do not throw exceptions. The quiet SAC_NaN
  * constant is returned to indicate an error.
  */
 struct statistical_accumulator {
@@ -170,11 +170,11 @@ static inline struct statistical_accumulator *sac_add(struct statistical_accumul
 /*!
  * \brief Subtracts a value from the statistical accumulator.
  * \details The sac_sub functional operator subtracts a value from the
- * accumulator.  This assumes that the given value has previously been added to
+ * accumulator. This assumes that the given value has previously been added to
  * the accumulator with the sac_add function. The statistics are updated to reflect
  * the removal of the given value.
  *
- * The implementation does not modify the minimum and maximum.  The
+ * The implementation does not modify the minimum and maximum. The
  * values returned by `sac_min` and `sac_max` are invalid when the `sac_sub`
  * function is used.
  * \param sac Pointer to statistical accumulator structure, mutable.
