@@ -19,7 +19,7 @@
  * This can be overridden to use a different floating-point type.
  */
 #ifndef SAC_SCALAR_T
-#define SAC_SCALAR_T double
+#define SAC_SCALAR_T float
 #endif
 
 typedef SAC_SCALAR_T sac_scalar_t;
@@ -50,7 +50,7 @@ typedef SAC_SIZE_T sac_size_t;
  * overridden to use a custom square root implementation.
  */
 #ifndef SAC_SQRT
-#define SAC_SQRT sqrt
+#define SAC_SQRT sqrtf
 #endif
 
 /*!
