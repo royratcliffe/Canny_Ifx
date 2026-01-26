@@ -36,9 +36,10 @@
  * \param _what_ The name of the function to be called when the event occurs.
  */
 #define WHEN_WHAT(_when_, _what_)                                                                                      \
-  static inline void __##_when_##_with(void *with) { WHEN_WITH(_when_, with); }                                        \
-  static void _what_(void *with);                                                                                      \
-  __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with) = &_what_
+  static inline void __##_when_##_with(void *with, ...) { WHEN_WITH(_when_, with); }                                   \
+  static void _what_(void *with, ...);                                                                                 \
+  __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with, ...) =    \
+      &_what_
 
 /*!
  * \brief When something happened, do something with it.
