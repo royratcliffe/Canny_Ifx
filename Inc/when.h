@@ -60,7 +60,7 @@
  * of the callback list for the event.
  *
  * \param _when_ The name of the event that triggers the callback.
- * \param _with_ The argument to be passed to the callback function when the
+ * \param ... The arguments to be passed to the callback function when the
  * event occurs.
  * \note This macro is designed to work with compilers that support specific
  * section attributes, such as the TASKING or GCC compilers. It uses weak
