@@ -21,8 +21,8 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CANNY_IFX_INC_WHEN_H_
-#define CANNY_IFX_INC_WHEN_H_
+#ifndef WHEN_H_
+#define WHEN_H_
 
 #include "stringify.h"
 
@@ -87,4 +87,16 @@
   } while (0)
 #endif /* __TASKING__ || __GNUC__ */
 
-#endif /* CANNY_IFX_INC_WHEN_H_ */
+/*!
+ * \brief Type definition for when callback functions.
+ * \details This type defines the signature for callback functions that can
+ * be registered using the WHEN_WHAT macro. These functions take a single
+ * void pointer argument and a variable number of additional arguments.
+ * \note The void pointer argument can be used to pass context or state
+ * information to the callback function.
+ * \see WHEN_WHAT
+ * \see WHEN_WITH
+ */
+typedef void (*when_func_t)(void *with, ...);
+
+#endif /* WHEN_H_ */
