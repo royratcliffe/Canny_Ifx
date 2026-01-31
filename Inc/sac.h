@@ -13,6 +13,7 @@
 
 #include <limits.h>
 #include <math.h>
+#include <stddef.h>
 
 /*!
  * \brief Scalar type used for statistical calculations.
