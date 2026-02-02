@@ -21,10 +21,10 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef CANNY_IFX_INC_WHEN_H_
-#define CANNY_IFX_INC_WHEN_H_
+#ifndef WHEN_H_
+#define WHEN_H_
 
-#include "stringify.h"
+#include "lc.h"
 
 /*!
  * \brief Whenever something happens, do what.
@@ -35,10 +35,10 @@
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
-#define WHEN_WHAT(_when_, _what_)                                                 \
-    static inline void __##_when_##_with(void *with) { WHEN_WITH(_when_, with); } \
-    static void _what_(void *with);                                               \
-    __attribute__((section(STRINGIFY(when_##_when_)), used)) static void (*const __when__##_what_)(void *with) = &_what_
+#define WHEN_WHAT(_when_, _what_)                                                                                                                              \
+  static inline void __##_when_##_with(void *with, ...) { WHEN_WITH(_when_, with); }                                                                           \
+  static void _what_(void *with, ...);                                                                                                                         \
+  SECTION_USED(when_##_when_) static void (*const __when__##_what_)(void *with, ...) = &_what_
 
 /*!
  * \brief When something happened, do something with it.
@@ -59,7 +59,7 @@
  * of the callback list for the event.
  *
  * \param _when_ The name of the event that triggers the callback.
- * \param _with_ The argument to be passed to the callback function when the
+ * \param ... The arguments to be passed to the callback function when the
  * event occurs.
  * \note This macro is designed to work with compilers that support specific
  * section attributes, such as the TASKING or GCC compilers. It uses weak
@@ -67,27 +67,35 @@
  * causing linker errors.
  */
 #if defined(__TASKING__)
-#define WHEN_WITH(_when_, _with_)                                                                             \
-    do                                                                                                        \
-    {                                                                                                         \
-        extern void (*const _lc_ub_##when_##_when_[])(void *with);                                            \
-        extern void (*const _lc_ue_##when_##_when_[])(void *with);                                            \
-        for (void (*const *what)(void *with) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) \
-        {                                                                                                     \
-            (**what)(_with_);                                                                                 \
-        }                                                                                                     \
-    } while (0)
+#define WHEN_WITH(_when_, ...)                                                                                                                                 \
+  do {                                                                                                                                                         \
+    extern void (*const _lc_ub_##when_##_when_[])(void *with, ...);                                                                                            \
+    extern void (*const _lc_ue_##when_##_when_[])(void *with, ...);                                                                                            \
+    for (void (*const *what)(void *with, ...) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) {                                               \
+      (**what)(__VA_ARGS__);                                                                                                                                   \
+    }                                                                                                                                                          \
+  } while (0)
 #elif defined(__GNUC__)
-#define WHEN_WITH(_when_, _with_)                                                                              \
-    do                                                                                                         \
-    {                                                                                                          \
-        extern void (*const __start_##when_##_when_[])(void *with) __attribute__((weak));                      \
-        extern void (*const __stop_##when_##_when_[])(void *with) __attribute__((weak));                       \
-        for (void (*const *what)(void *with) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) \
-        {                                                                                                      \
-            (**what)(_with_);                                                                                  \
-        }                                                                                                      \
-    } while (0)
+#define WHEN_WITH(_when_, ...)                                                                                                                                 \
+  do {                                                                                                                                                         \
+    extern void (*const __start_##when_##_when_[])(void *with, ...) __attribute__((weak));                                                                     \
+    extern void (*const __stop_##when_##_when_[])(void *with, ...) __attribute__((weak));                                                                      \
+    for (void (*const *what)(void *with, ...) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) {                                              \
+      (**what)(__VA_ARGS__);                                                                                                                                   \
+    }                                                                                                                                                          \
+  } while (0)
 #endif /* __TASKING__ || __GNUC__ */
 
-#endif /* CANNY_IFX_INC_WHEN_H_ */
+/*!
+ * \brief Type definition for when callback functions.
+ * \details This type defines the signature for callback functions that can
+ * be registered using the WHEN_WHAT macro. These functions take a single
+ * void pointer argument and a variable number of additional arguments.
+ * \note The void pointer argument can be used to pass context or state
+ * information to the callback function.
+ * \see WHEN_WHAT
+ * \see WHEN_WITH
+ */
+typedef void (*when_func_t)(void *with, ...);
+
+#endif /* WHEN_H_ */
