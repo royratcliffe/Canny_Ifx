@@ -35,9 +35,9 @@
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
-#define WHEN_WHAT(_when_, _what_)                                                                                                                              \
-  static inline void __##_when_##_with(void *with, ...) { WHEN_WITH(_when_, with); }                                                                           \
-  static void _what_(void *with, ...);                                                                                                                         \
+#define WHEN_WHAT(_when_, _what_)                                                    \
+  static inline void __##_when_##_with(void *with, ...) { WHEN_WITH(_when_, with); } \
+  static void _what_(void *with, ...);                                               \
   SECTION_USED(when_##_when_) static void (*const __when__##_what_)(void *with, ...) = &_what_
 
 /*!
@@ -67,22 +67,22 @@
  * causing linker errors.
  */
 #if defined(__TASKING__)
-#define WHEN_WITH(_when_, ...)                                                                                                                                 \
-  do {                                                                                                                                                         \
-    extern void (*const _lc_ub_##when_##_when_[])(void *with, ...);                                                                                            \
-    extern void (*const _lc_ue_##when_##_when_[])(void *with, ...);                                                                                            \
-    for (void (*const *what)(void *with, ...) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) {                                               \
-      (**what)(__VA_ARGS__);                                                                                                                                   \
-    }                                                                                                                                                          \
+#define WHEN_WITH(_when_, ...)                                                                                   \
+  do {                                                                                                           \
+    extern void (*const _lc_ub_##when_##_when_[])(void *with, ...);                                              \
+    extern void (*const _lc_ue_##when_##_when_[])(void *with, ...);                                              \
+    for (void (*const *what)(void *with, ...) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) { \
+      (**what)(__VA_ARGS__);                                                                                     \
+    }                                                                                                            \
   } while (0)
 #elif defined(__GNUC__)
-#define WHEN_WITH(_when_, ...)                                                                                                                                 \
-  do {                                                                                                                                                         \
-    extern void (*const __start_##when_##_when_[])(void *with, ...) __attribute__((weak));                                                                     \
-    extern void (*const __stop_##when_##_when_[])(void *with, ...) __attribute__((weak));                                                                      \
-    for (void (*const *what)(void *with, ...) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) {                                              \
-      (**what)(__VA_ARGS__);                                                                                                                                   \
-    }                                                                                                                                                          \
+#define WHEN_WITH(_when_, ...)                                                                                    \
+  do {                                                                                                            \
+    extern void (*const __start_##when_##_when_[])(void *with, ...) __attribute__((weak));                        \
+    extern void (*const __stop_##when_##_when_[])(void *with, ...) __attribute__((weak));                         \
+    for (void (*const *what)(void *with, ...) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) { \
+      (**what)(__VA_ARGS__);                                                                                      \
+    }                                                                                                             \
   } while (0)
 #endif /* __TASKING__ || __GNUC__ */
 
