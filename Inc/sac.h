@@ -32,6 +32,7 @@ typedef SAC_SCALAR_T sac_scalar_t;
  * This can be overridden to use a different size type.
  */
 #ifndef SAC_SIZE_T
+#include <stddef.h>
 #define SAC_SIZE_T size_t
 #endif
 
@@ -83,7 +84,7 @@ typedef SAC_SIZE_T sac_size_t;
  * updated to reflect the new data value.
  *
  * All the accumulator's behaviors involve floating-point operations if your
- * `SAC_SCALAR_TYPE` type is `float` or `double`. So, these structures should
+ * `SAC_SCALAR_T` type is `float` or `double`. So, these structures should
  * not normally be used in interrupt handlers unless the floating-point unit
  * permits re-entrancy. The statistics are only partially computed when the data
  * are added to the accumulator. The mean and standard deviation statistics are
@@ -94,16 +95,16 @@ typedef SAC_SIZE_T sac_size_t;
  *
  * The API provides the following interface:
  *
- *         sac_add(SAC_SCALAR_TYPE x)
- *         sac_sub(SAC_SCALAR_TYPE x)
+ *         sac_add(SAC_SCALAR_T x)
+ *         sac_sub(SAC_SCALAR_T x)
  *         void sac_clear()
  *         unsigned int sac_count() const
- *         SAC_SCALAR_TYPE sac_avg() const
- *         SAC_SCALAR_TYPE sac_st_dev() const
- *         SAC_SCALAR_TYPE sac_st_dev_p() const
- *         SAC_SCALAR_TYPE sac_var() const
- *         SAC_SCALAR_TYPE sac_min() const
- *         SAC_SCALAR_TYPE sac_max() const
+ *         SAC_SCALAR_T sac_avg() const
+ *         SAC_SCALAR_T sac_st_dev() const
+ *         SAC_SCALAR_T sac_st_dev_p() const
+ *         SAC_SCALAR_T sac_var() const
+ *         SAC_SCALAR_T sac_min() const
+ *         SAC_SCALAR_T sac_max() const
  *
  * The first three modify the state of an accumulator. The other member functions
  * access the statistical information.
