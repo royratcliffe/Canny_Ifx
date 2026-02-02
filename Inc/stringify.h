@@ -39,9 +39,7 @@
  *
  * \param x The token or value to be converted to a string literal.
  */
-#ifndef STRINGIFY
 #define STRINGIFY(x) #x
-#endif
 
 /*!
  * \brief Expands the macro argument and then converts it into a string literal.
