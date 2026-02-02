@@ -19,7 +19,9 @@
  * \param mask A mask that specifies which bits to swap.
  * \return The original value before the swap operation.
  */
-#if defined(__GNUC__)
+#if defined(__TASKING__)
+IFX_INLINE unsigned int Ifx__swapAndMask(unsigned int volatile *address, unsigned int value, unsigned int mask) { return __swapmskw(address, value, mask); }
+#elif defined(__GNUC__)
 IFX_INLINE unsigned int Ifx__swapAndMask(unsigned int volatile *address, unsigned int value, unsigned int mask) {
   __extension__ unsigned long long reg64 = value | (unsigned long long)mask << 32;
   __asm__ __volatile__("swapmsk.w [%[addr]]0, %A[reg]" : [reg] "+d"(reg64) : [addr] "a"(address) : "memory");
