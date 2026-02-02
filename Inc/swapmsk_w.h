@@ -20,7 +20,9 @@
  * \return The original value before the swap operation.
  */
 #if defined(__TASKING__)
-IFX_INLINE unsigned int Ifx__swapAndMask(unsigned int volatile *address, unsigned int value, unsigned int mask) { return __swapmskw((unsigned int *)address, value, mask); }
+IFX_INLINE unsigned int Ifx__swapAndMask(unsigned int volatile *address, unsigned int value, unsigned int mask) {
+  return __swapmskw((unsigned int *)address, value, mask);
+}
 #elif defined(__GNUC__)
 IFX_INLINE unsigned int Ifx__swapAndMask(unsigned int volatile *address, unsigned int value, unsigned int mask) {
   __extension__ unsigned long long reg64 = value | (unsigned long long)mask << 32;
