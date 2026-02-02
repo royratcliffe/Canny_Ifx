@@ -77,10 +77,23 @@
  * linker uses the section name to place the item in the correct section and to
  * prevent its removal during optimisation.
  *
+ * Note that different compilers may have varying syntax for specifying
+ * section attributes. This macro abstracts those differences, providing a
+ * consistent interface for marking items as used across supported compilers.
+ *
+ * The TASKING compiler includes the `protect` attribute to safeguard the section
+ * from being altered or removed during optimisation processes. Without this attribute,
+ * the linker might consider the section as unused and eliminate it, especially if it
+ * contains functions or variables that are not explicitly referenced in the code.
+ *
  * \param _section_ The name of the section where the function or variable should be placed.
  * \note The section name is converted to a string literal using the STRINGIFY macro.
  */
+#if defined(__TASKING__)
+#define SECTION_USED(_section_) __attribute__((section(STRINGIFY(_section_)), used, protect))
+#elif defined(__GNUC__)
 #define SECTION_USED(_section_) __attribute__((section(STRINGIFY(_section_)), used))
+#endif
 
 /*!
  * \brief Start of section.
