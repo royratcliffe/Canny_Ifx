@@ -27,6 +27,24 @@
 #include "lc.h"
 
 /*!
+ * \brief Start of when section.
+ * \details This macro defines the start of a section in the binary where
+ * callback functions for a specific event are stored. It is used in conjunction
+ * with the END_OF_WHEN macro to delineate the section.
+ * \param _when_ The name of the event for which the section is defined.
+ */
+#define START_OF_WHEN(_when_) START_OF_SECTION(when_##_when_)
+
+/*!
+ * \brief End of when section.
+ * \details This macro defines the end of a section in the binary where
+ * callback functions for a specific event are stored. It is used in conjunction
+ * with the START_OF_WHEN macro to delineate the section.
+ * \param _when_ The name of the event for which the section is defined.
+ */
+#define END_OF_WHEN(_when_) END_OF_SECTION(when_##_when_)
+
+/*!
  * \brief Whenever something happens, do what.
  * \details This macro defines a function that is called when a specific event
  * occurs. It is used to register a callback function that will be executed when
@@ -35,9 +53,9 @@
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
-#define WHEN_WHAT(_when_, _what_)                                                    \
-  static inline void __##_when_##_with(void *with, ...) { WHEN_WITH(_when_, with); } \
-  static void _what_(void *with, ...);                                               \
+#define CAUSES(_when_, _what_)                                                      \
+  static inline void __##_when_##_occurs(void *with, ...) { OCCURS(_when_, with); } \
+  static void _what_(void *with, ...);                                              \
   SECTION_USED(when_##_when_) static void (*const __when__##_what_)(void *with, ...) = &_what_
 
 /*!
@@ -67,22 +85,22 @@
  * causing linker errors.
  */
 #if defined(__TASKING__)
-#define WHEN_WITH(_when_, ...)                                                                                   \
-  do {                                                                                                           \
-    extern void (*const _lc_ub_##when_##_when_[])(void *with, ...);                                              \
-    extern void (*const _lc_ue_##when_##_when_[])(void *with, ...);                                              \
-    for (void (*const *what)(void *with, ...) = _lc_ub_##when_##_when_; what < _lc_ue_##when_##_when_; what++) { \
-      (**what)(__VA_ARGS__);                                                                                     \
-    }                                                                                                            \
+#define OCCURS(_when_, ...)                                                                                  \
+  do {                                                                                                       \
+    extern void (*const START_OF_WHEN(_when_)[])(void *with, ...);                                           \
+    extern void (*const END_OF_WHEN(_when_)[])(void *with, ...);                                             \
+    for (void (*const *what)(void *with, ...) = START_OF_WHEN(_when_); what < END_OF_WHEN(_when_); what++) { \
+      (**what)(__VA_ARGS__);                                                                                 \
+    }                                                                                                        \
   } while (0)
 #elif defined(__GNUC__)
-#define WHEN_WITH(_when_, ...)                                                                                    \
-  do {                                                                                                            \
-    extern void (*const __start_##when_##_when_[])(void *with, ...) __attribute__((weak));                        \
-    extern void (*const __stop_##when_##_when_[])(void *with, ...) __attribute__((weak));                         \
-    for (void (*const *what)(void *with, ...) = __start_##when_##_when_; what < __stop_##when_##_when_; what++) { \
-      (**what)(__VA_ARGS__);                                                                                      \
-    }                                                                                                             \
+#define OCCURS(_when_, ...)                                                                                  \
+  do {                                                                                                       \
+    extern void (*const START_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));                     \
+    extern void (*const END_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));                       \
+    for (void (*const *what)(void *with, ...) = START_OF_WHEN(_when_); what < END_OF_WHEN(_when_); what++) { \
+      (**what)(__VA_ARGS__);                                                                                 \
+    }                                                                                                        \
   } while (0)
 #endif /* __TASKING__ || __GNUC__ */
 
@@ -93,8 +111,8 @@
  * void pointer argument and a variable number of additional arguments.
  * \note The void pointer argument can be used to pass context or state
  * information to the callback function.
- * \see WHEN_WHAT
- * \see WHEN_WITH
+ * \see CAUSES
+ * \see OCCURS
  */
 typedef void (*when_func_t)(void *with, ...);
 
