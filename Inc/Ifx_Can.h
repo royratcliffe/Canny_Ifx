@@ -34,4 +34,18 @@ void Ifx_Can_initModule(IfxCan_Can *can, Ifx_CAN *can_module);
  */
 void Ifx_Can_Node_readRxBuffer(IfxCan_Can_Node *node, IfxCan_RxBufferId id, IfxCan_Message *message, uint32 *data);
 
+/*!
+ * \brief Read a message from an Rx FIFO.
+ * \details This function reads a message from the specified Rx FIFO of the
+ * CAN node. It sets up the message structure to read from the specified Rx
+ * FIFO and invokes the generic message read function.
+ * \param node Pointer to the CAN node handle.
+ * \param fifo Rx FIFO number (0 or 1) to read from.
+ * \param message Pointer to the message structure to be filled with the
+ * received message metadata.
+ * \param data Pointer to the data array to be filled with the received message
+ * data.
+ */
+void Ifx_Can_Node_readRxFifo(IfxCan_Can_Node *node, uint8_least fifo, IfxCan_Message *message, uint32 *data);
+
 #endif /* IFX_CAN_H */

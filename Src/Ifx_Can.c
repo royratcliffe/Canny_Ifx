@@ -26,3 +26,10 @@ void Ifx_Can_Node_readRxBuffer(IfxCan_Can_Node *node, IfxCan_RxBufferId id, IfxC
   message->readFromRxFifo1 = FALSE;
   IfxCan_Can_readMessage(node, message, data);
 }
+
+void Ifx_Can_Node_readRxFifo(IfxCan_Can_Node *node, uint8_least fifo, IfxCan_Message *message, uint32 *data) {
+  boolean is_fifo0 = (fifo == 0) ? TRUE : FALSE;
+  message->readFromRxFifo0 = is_fifo0;
+  message->readFromRxFifo1 = !is_fifo0;
+  IfxCan_Can_readMessage(node, message, data);
+}
