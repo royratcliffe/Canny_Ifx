@@ -33,7 +33,7 @@ boolean event_group_signal(event_group_t *event_group, int clz);
  * \param event_group Pointer to the event group to synchronise.
  * \param sync Function pointer to the synchronisation function to call for each set event.
  */
-void event_group_sync(event_group_t *event_group, void (*sync)(int clz));
+void event_group_sync(event_group_t *event_group, void (*sync)(event_group_t *event_group, int clz));
 
 /*!
  * \brief Sets events in the event group.
