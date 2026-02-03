@@ -44,6 +44,16 @@
  */
 #define END_OF_WHEN(_when_) END_OF_SECTION(when_##_when_)
 
+/*!
+ * \brief When section extern declarations.
+ * \details This macro declares the start and end symbols for a section in the
+ * binary where callback functions for a specific event are stored. It is used
+ * to make these symbols visible across translation units for correct linker
+ * resolution.
+ * \param _when_ The name of the event for which the section symbols are declared.
+ * \note This macro is designed to work with compilers that support specific
+ * section attributes, such as the TASKING or GCC compilers.
+ */
 #if defined(__TASKING__)
 #define WHEN(_when_)                                             \
   extern void (*const START_OF_WHEN(_when_)[])(void *with, ...); \
