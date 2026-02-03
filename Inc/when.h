@@ -104,7 +104,6 @@
  * symbols to allow for multiple definitions of the same function without
  * causing linker errors.
  */
-#if defined(__TASKING__)
 #define OCCURS(_when_, ...)                                                                                  \
   do {                                                                                                       \
     WHEN(_when_);                                                                                            \
@@ -112,15 +111,6 @@
       (**what)(__VA_ARGS__);                                                                                 \
     }                                                                                                        \
   } while (0)
-#elif defined(__GNUC__)
-#define OCCURS(_when_, ...)                                                                                  \
-  do {                                                                                                       \
-    WHEN(_when_);                                                                                            \
-    for (void (*const *what)(void *with, ...) = START_OF_WHEN(_when_); what < END_OF_WHEN(_when_); what++) { \
-      (**what)(__VA_ARGS__);                                                                                 \
-    }                                                                                                        \
-  } while (0)
-#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief Type definition for when callback functions.
