@@ -20,6 +20,22 @@ void Ifx_Can_initModule(IfxCan_Can *can, Ifx_CAN *can_module) {
   IfxCan_Can_initModule(can, &can_config);
 }
 
+uint64 Ifx_Can_Node_getRxBufferNewDataUpdated(IfxCan_Can_Node *node) {
+  /*
+   * Check which Rx buffers have received new data.
+   * Set the corresponding bits in rx_buffer.
+   * Invoke the event with the rx_buffer bitmask if any Rx buffer has new data.
+   * Do not assume that only one Rx buffer has new data.
+   */
+  uint64 rx_buffer = 0ULL;
+  for (IfxCan_RxBufferId rx_buffer_id = IfxCan_RxBufferId_0; rx_buffer_id <= IfxCan_RxBufferId_63; rx_buffer_id++) {
+    if (IfxCan_Node_isRxBufferNewDataUpdated(node->node, rx_buffer_id)) {
+      rx_buffer |= 1ULL << rx_buffer_id;
+    }
+  }
+  return rx_buffer;
+}
+
 void Ifx_Can_Node_readRxBuffer(IfxCan_Can_Node *node, IfxCan_RxBufferId id, IfxCan_Message *message, uint32 *data) {
   message->bufferNumber = id;
   message->readFromRxFifo0 = FALSE;

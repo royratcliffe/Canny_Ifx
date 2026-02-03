@@ -21,6 +21,17 @@
 void Ifx_Can_initModule(IfxCan_Can *can, Ifx_CAN *can_module);
 
 /*!
+ * \brief Get Rx buffers with new data updated.
+ * \details This function checks which Rx buffers have received new data and
+ * returns a bitmask indicating the buffers with new data.
+ * \param node Pointer to the CAN node handle.
+ * \return A 64-bit bitmask where each bit represents an Rx buffer. A bit is
+ * set to 1 if the corresponding Rx buffer has received new data, otherwise it
+ * is set to 0.
+ */
+uint64 Ifx_Can_Node_getRxBufferNewDataUpdated(IfxCan_Can_Node *node);
+
+/*!
  * \brief Read a message from a dedicated Rx buffer.
  * \details This function reads a message from the specified dedicated Rx
  * buffer of the CAN node. It sets up the message structure to read from the
