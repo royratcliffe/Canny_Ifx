@@ -7,6 +7,7 @@
 #define IFX_CAN_H
 
 #include "IfxCan_Can.h"
+#include "Ifx_Isr.h"
 #include "when.h"
 
 /*!
@@ -32,8 +33,7 @@
       can_node_config->interruptConfig.reint.typeOfService = IfxSrc_Tos_cpu##_cpu_;         \
     }                                                                                       \
   }                                                                                         \
-  IFX_INTERRUPT(cpu##_cpu_##_pri_##_can_node_isr, _cpu_, _pri_);                            \
-  void cpu##_cpu_##_pri_##_can_node_isr(void) { Ifx_Can_Node_Reint_Isr(_node_); }
+  IFX_ISR(_isr_, _cpu_, _pri_, _node_)
 
 /*!
  * \brief Initialise a CAN module.
