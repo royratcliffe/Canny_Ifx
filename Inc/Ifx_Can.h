@@ -9,6 +9,32 @@
 #include "IfxCan_Can.h"
 
 /*!
+ * \brief Macro to define an interrupt service routine (ISR) for CAN node Rx buffer interrupts.
+ * \param _isr_ Name of the ISR function.
+ * \param _cpu_ CPU number.
+ * \param _pri_ Interrupt priority level.
+ * \param _node_ Pointer to the CAN node handle.
+ * \param _line_ Interrupt line number.
+ * \details This macro declares an interrupt service routine (ISR) for handling
+ * CAN node Rx buffer interrupts. It sets up the ISR with the specified name,
+ * vector table number, priority level, and CAN node handle. The ISR clears
+ * the interrupt flag and checks which Rx buffers have received new data,
+ */
+#define IFX_CAN_REINT_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
+  CAUSES(can_node_config, can_node_config);                                                 \
+  static void can_node_config(void *with, ...) {                                            \
+    if (_node_ == with) {                                                                   \
+      IfxCan_Can_NodeConfig *can_node_config = with;                                        \
+      can_node_config->interruptConfig.messageStoredToDedicatedRxBufferEnabled = TRUE;      \
+      can_node_config->interruptConfig.reint.priority = _pri_;                              \
+      can_node_config->interruptConfig.reint.interruptLine = IfxCan_InterruptLine_##_line_; \
+      can_node_config->interruptConfig.reint.typeOfService = IfxSrc_Tos_cpu##_cpu_;         \
+    }                                                                                       \
+  }                                                                                         \
+  IFX_INTERRUPT(cpu##_cpu_##_pri_##_can_node_isr, _cpu_, _pri_);                            \
+  void cpu##_cpu_##_pri_##_can_node_isr(void) { Ifx_Can_Node_Reint_Isr(_node_); }
+
+/*!
  * \brief Initialise a CAN module.
  * \param can Pointer to the CAN handle to be initialised.
  * \param can_module Pointer to the CAN module to be initialised.
