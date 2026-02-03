@@ -7,6 +7,7 @@
 #define IFX_CAN_H
 
 #include "IfxCan_Can.h"
+#include "when.h"
 
 /*!
  * \brief Macro to define an interrupt service routine (ISR) for CAN node Rx buffer interrupts.
