@@ -19,3 +19,10 @@ void Ifx_Can_initModule(IfxCan_Can *can, Ifx_CAN *can_module) {
   IfxCan_Can_initModuleConfig(&can_config, can_module);
   IfxCan_Can_initModule(can, &can_config);
 }
+
+void Ifx_Can_Node_readRxBuffer(IfxCan_Can_Node *node, IfxCan_RxBufferId id, IfxCan_Message *message, uint32 *data) {
+  message->bufferNumber = id;
+  message->readFromRxFifo0 = FALSE;
+  message->readFromRxFifo1 = FALSE;
+  IfxCan_Can_readMessage(node, message, data);
+}
