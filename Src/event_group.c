@@ -9,8 +9,13 @@ void event_group_sync(event_group_t *event_group, void (*sync)(int clz, va_list 
   va_list va;
   va_start(va, sync);
   event_mask_t mask = event_group_clear(event_group, 0xffffffffUL);
-  for (int clz; (clz = __clz(mask)) < 32; mask &= ~(1 << clz)) {
-    sync(clz, va);
+  /*
+   * CLZ counts leading zeros, so we can use it to find the lowest set bit in the mask.
+   * Leading zeros are counted from the most significant bit (bit 31) to the least significant bit (bit 0).
+   * Thus, __clz(mask) returns the index of the first set bit (0-31) or 32 if no bits are set.
+   */
+  for (int clz; (clz = __clz(mask)) < 32; mask &= ~(0x80000000UL >> clz)) {
+    sync(31 - clz, va);
   }
 }
 
