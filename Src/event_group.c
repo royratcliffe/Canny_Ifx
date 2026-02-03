@@ -3,7 +3,7 @@
 
 #include "IfxCpu.h"
 
-boolean event_group_signal(event_group_t *event_group, int clz) { return (event_group_set(event_group, 1 << clz) >> clz) & 1U != 0U; }
+boolean event_group_signal(event_group_t *event_group, int clz) { return ((event_group_set(event_group, 1 << clz) >> clz) & 1U) != 0U; }
 
 void event_group_sync(event_group_t *event_group, void (*sync)(int clz)) {
   event_mask_t mask = event_group_clear(event_group, 0xffffffffUL);
