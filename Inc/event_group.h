@@ -1,6 +1,7 @@
 #ifndef CANNY_IFX_INC_EVENT_GROUP_H_
 #define CANNY_IFX_INC_EVENT_GROUP_H_
 
+/* for boolean */
 #include "Platform_Types.h"
 
 /*!
