@@ -44,6 +44,16 @@
  */
 #define END_OF_WHEN(_when_) END_OF_SECTION(when_##_when_)
 
+#if defined(__TASKING__)
+#define WHEN(_when_)                                             \
+  extern void (*const START_OF_WHEN(_when_)[])(void *with, ...); \
+  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...);
+#elif defined(__GNUC__)
+#define WHEN(_when_)                                                                   \
+  extern void (*const START_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak)); \
+  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));
+#endif /* __TASKING__ || __GNUC__ */
+
 /*!
  * \brief Whenever something happens, do what.
  * \details This macro defines a function that is called when a specific event
@@ -87,8 +97,7 @@
 #if defined(__TASKING__)
 #define OCCURS(_when_, ...)                                                                                  \
   do {                                                                                                       \
-    extern void (*const START_OF_WHEN(_when_)[])(void *with, ...);                                           \
-    extern void (*const END_OF_WHEN(_when_)[])(void *with, ...);                                             \
+    WHEN(_when_);                                                                                            \
     for (void (*const *what)(void *with, ...) = START_OF_WHEN(_when_); what < END_OF_WHEN(_when_); what++) { \
       (**what)(__VA_ARGS__);                                                                                 \
     }                                                                                                        \
@@ -96,8 +105,7 @@
 #elif defined(__GNUC__)
 #define OCCURS(_when_, ...)                                                                                  \
   do {                                                                                                       \
-    extern void (*const START_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));                     \
-    extern void (*const END_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));                       \
+    WHEN(_when_);                                                                                            \
     for (void (*const *what)(void *with, ...) = START_OF_WHEN(_when_); what < END_OF_WHEN(_when_); what++) { \
       (**what)(__VA_ARGS__);                                                                                 \
     }                                                                                                        \
