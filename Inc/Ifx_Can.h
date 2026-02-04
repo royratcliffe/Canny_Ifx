@@ -13,18 +13,18 @@
 /*!
  * \brief Macro to define an interrupt service routine (ISR) for CAN node Rx buffer interrupts.
  * \param _isr_ Name of the ISR function.
- * \param _cpu_ CPU number.
+ * \param _cpu_ CPU number, 0 through 3.
  * \param _pri_ Interrupt priority level.
  * \param _node_ Pointer to the CAN node handle.
  * \param _line_ Interrupt line number.
  * \details This macro declares an interrupt service routine (ISR) for handling
  * CAN node Rx buffer interrupts. It sets up the ISR with the specified name,
  * vector table number, priority level, and CAN node handle. The ISR clears
- * the interrupt flag and checks which Rx buffers have received new data,
+ * the interrupt flag and checks which Rx buffers have received new data.
  */
 #define IFX_CAN_REINT_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
-  CAUSES(can_node_config, can_node_config);                                                 \
-  static void can_node_config(void *with, ...) {                                            \
+  CAUSES(can_node_config, can_node_config_##_isr_);                                          \
+  static void can_node_config_##_isr_(void *with, ...) {                                    \
     if (_node_ == with) {                                                                   \
       IfxCan_Can_NodeConfig *can_node_config = with;                                        \
       can_node_config->interruptConfig.messageStoredToDedicatedRxBufferEnabled = TRUE;      \
