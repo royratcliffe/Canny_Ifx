@@ -11,5 +11,5 @@ target_sources(Canny_Ifx PRIVATE
     Src/compare_float.c
 )
 target_link_libraries(Canny_Ifx
-    ConfigurationsAndLibraries
+    iLLD
 )
