@@ -49,3 +49,29 @@ void Ifx_Can_Node_readRxFifo(IfxCan_Can_Node *node, uint8_least fifo, IfxCan_Mes
   message->readFromRxFifo1 = !is_fifo0;
   IfxCan_Can_readMessage(node, message, data);
 }
+
+void Ifx_Can_Node_rxBufferIsr(IfxCan_Can_Node *node) {
+  IfxCan_Node_clearInterruptFlag(node->node, IfxCan_Interrupt_messageStoredToDedicatedRxBuffer);
+  /*
+   * Check which Rx buffers have received new data.
+   * Set the corresponding bits in rx_buffer.
+   * Invoke the event with the rx_buffer bitmask if any Rx buffer has new data.
+   * Do not assume that only one Rx buffer has new data.
+   */
+  uint64 rx_buffer = Ifx_Can_Node_getRxBufferNewDataUpdated(node);
+  if (rx_buffer != 0ULL) {
+    /*
+     * Invoke an ISR-level event with a pointer to the rx_buffer bitmask as its
+     * argument. ISR-level events should be kept short and quick. Interrupts are
+     * disabled while executing the event handlers. The actual processing of the
+     * received messages should be done in a non-ISR context.
+     *
+     * Technically, the event argument is a pointer to a local variable on the
+     * stack of this ISR. This is safe as long as the event handler does not
+     * retain the pointer beyond the lifetime of the ISR. Assume that the event
+     * handler copies the bitmask value if it needs to retain it, and that it
+     * does not store the pointer or modify the value.
+     */
+    OCCURS(isr_can_node_rx_buffer, node, rx_buffer);
+  }
+}

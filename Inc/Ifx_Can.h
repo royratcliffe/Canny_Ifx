@@ -36,6 +36,20 @@
   IFX_ISR(_isr_, _cpu_, _pri_, _node_)
 
 /*!
+ * \brief Macro to define an interrupt service routine (ISR) for CAN node Rx buffer interrupts.
+ * \param _cpu_ CPU number.
+ * \param _pri_ Interrupt priority level.
+ * \param _node_ Pointer to the CAN node handle.
+ * \param _line_ Interrupt line number.
+ * \details This macro declares an interrupt service routine (ISR) for handling
+ * CAN node Rx buffer interrupts. It sets up the ISR with the specified name,
+ * vector table number, priority level, and CAN node handle. The ISR clears
+ * the interrupt flag and checks which Rx buffers have received new data,
+ * invoking the appropriate event if any Rx buffer has new data.
+ */
+#define IFX_CAN_NODE_REINT_ISR(_cpu_, _pri_, _node_, _line_) IFX_CAN_REINT_ISR(Ifx_Can_Node_rxBufferIsr, _cpu_, _pri_, _node_, _line_)
+
+/*!
  * \brief Initialise a CAN module.
  * \param can Pointer to the CAN handle to be initialised.
  * \param can_module Pointer to the CAN module to be initialised.
@@ -107,5 +121,15 @@ void Ifx_Can_Node_readRxBuffer(IfxCan_Can_Node *node, IfxCan_RxBufferId id, IfxC
  * data.
  */
 void Ifx_Can_Node_readRxFifo(IfxCan_Can_Node *node, uint8_least fifo, IfxCan_Message *message, uint32 *data);
+
+/*!
+ * \brief Interrupt service routine for CAN node Rx buffer interrupts.
+ * \details This function serves as the interrupt service routine (ISR) for
+ * CAN node Rx buffer interrupts. It clears the interrupt flag and checks
+ * which Rx buffers have received new data, invoking the appropriate event if
+ * any Rx buffer has new data.
+ * \param node Pointer to the CAN node handle.
+ */
+void Ifx_Can_Node_rxBufferIsr(IfxCan_Can_Node *node);
 
 #endif /* IFX_CAN_H */
