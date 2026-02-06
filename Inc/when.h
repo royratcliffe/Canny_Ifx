@@ -33,7 +33,11 @@
  * with the END_OF_WHEN macro to delineate the section.
  * \param _when_ The name of the event for which the section is defined.
  */
+#if defined(__TASKING__)
+#define START_OF_WHEN(_when_) _lc_gb_when_##_when_
+#elif defined(__GNUC__)
 #define START_OF_WHEN(_when_) START_OF_SECTION(when_##_when_)
+#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief End of when section.
@@ -42,7 +46,11 @@
  * with the START_OF_WHEN macro to delineate the section.
  * \param _when_ The name of the event for which the section is defined.
  */
+#if defined(__TASKING__)
+#define END_OF_WHEN(_when_) _lc_ge_when_##_when_
+#elif defined(__GNUC__)
 #define END_OF_WHEN(_when_) END_OF_SECTION(when_##_when_)
+#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief When section extern declarations.
