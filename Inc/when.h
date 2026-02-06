@@ -73,9 +73,8 @@
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
-#define CAUSES(_when_, _what_)                                                      \
-  static inline void __##_when_##_occurs(void *with, ...) { OCCURS(_when_, with); } \
-  static void _what_(void *with, ...);                                              \
+#define CAUSES(_when_, _what_)         \
+  static void _what_(void *with, ...); \
   SECTION_USED(when_##_when_) static void (*const __when__##_what_)(void *with, ...) = &_what_
 
 /*!
