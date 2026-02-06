@@ -57,11 +57,11 @@
 #if defined(__TASKING__)
 #define WHEN(_when_)                                             \
   extern void (*const START_OF_WHEN(_when_)[])(void *with, ...); \
-  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...);
+  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...)
 #elif defined(__GNUC__)
 #define WHEN(_when_)                                                                   \
   extern void (*const START_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak)); \
-  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak));
+  extern void (*const END_OF_WHEN(_when_)[])(void *with, ...) __attribute__((weak))
 #endif /* __TASKING__ || __GNUC__ */
 
 /*!
