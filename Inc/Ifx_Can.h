@@ -10,6 +10,8 @@
 #include "Ifx_Isr.h"
 #include "when.h"
 
+#include <stdarg.h>
+
 /*!
  * \brief Macro to define an interrupt service routine (ISR) for CAN node Rx buffer interrupts.
  * \param _isr_ Name of the ISR function.
@@ -23,16 +25,34 @@
  * the interrupt flag and checks which Rx buffers have received new data.
  */
 #define IFX_CAN_REINT_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
-  CAUSES(can_node_config, can_node_config_##_isr_);                                          \
+  CAUSES(can_node_config, can_node_config_##_isr_);                                         \
   static void can_node_config_##_isr_(void *with, ...) {                                    \
     if (_node_ == with) {                                                                   \
-      IfxCan_Can_NodeConfig *can_node_config = with;                                        \
+      va_list va;                                                                           \
+      va_start(va, with);                                                                   \
+      IfxCan_Can_NodeConfig *can_node_config = va_arg(va, IfxCan_Can_NodeConfig *);         \
       can_node_config->interruptConfig.messageStoredToDedicatedRxBufferEnabled = TRUE;      \
       can_node_config->interruptConfig.reint.priority = _pri_;                              \
       can_node_config->interruptConfig.reint.interruptLine = IfxCan_InterruptLine_##_line_; \
       can_node_config->interruptConfig.reint.typeOfService = IfxSrc_Tos_cpu##_cpu_;         \
     }                                                                                       \
   }                                                                                         \
+  IFX_ISR(_isr_, _cpu_, _pri_, _node_)
+
+#define IFX_CAN_RXF0N_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
+  CAUSES(can_node_config, can_node_config_##_isr_);                                         \
+  static void can_node_config_##_isr_(void *with, ...) {                                    \
+    if (_node_ == with) {                                                                   \
+      va_list va;                                                                           \
+      va_start(va, with);                                                                   \
+      IfxCan_Can_NodeConfig *can_node_config = va_arg(va, IfxCan_Can_NodeConfig *);         \
+      can_node_config->interruptConfig.rxFifo0NewMessageEnabled = TRUE;                     \
+      can_node_config->interruptConfig.rxf0n.priority = _pri_;                              \
+      can_node_config->interruptConfig.rxf0n.interruptLine = IfxCan_InterruptLine_##_line_; \
+      can_node_config->interruptConfig.rxf0n.typeOfService = IfxSrc_Tos_cpu##_cpu_;         \
+    }                                                                                       \
+  }                                                                                         \
+  void _isr_(IfxCan_Can_Node *node);                                                        \
   IFX_ISR(_isr_, _cpu_, _pri_, _node_)
 
 /*!
