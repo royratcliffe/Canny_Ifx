@@ -27,7 +27,7 @@
 #define IFX_CAN_REINT_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
   CAUSES(can_node_config, can_node_config_##_isr_);                                         \
   static void can_node_config_##_isr_(void *with, ...) {                                    \
-    if (_node_ == with) {                                                                   \
+    if ((void *)(_node_) == with) {                                                         \
       va_list va;                                                                           \
       va_start(va, with);                                                                   \
       IfxCan_Can_NodeConfig *can_node_config = va_arg(va, IfxCan_Can_NodeConfig *);         \
@@ -42,7 +42,7 @@
 #define IFX_CAN_RXF0N_ISR(_isr_, _cpu_, _pri_, _node_, _line_)                              \
   CAUSES(can_node_config, can_node_config_##_isr_);                                         \
   static void can_node_config_##_isr_(void *with, ...) {                                    \
-    if (_node_ == with) {                                                                   \
+    if ((void *)(_node_) == with) {                                                         \
       va_list va;                                                                           \
       va_start(va, with);                                                                   \
       IfxCan_Can_NodeConfig *can_node_config = va_arg(va, IfxCan_Can_NodeConfig *);         \
