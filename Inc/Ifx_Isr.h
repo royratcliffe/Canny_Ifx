@@ -12,6 +12,6 @@
  */
 #define IFX_ISR(_isr_, _cpu_, _pri_, ...)                          \
   void cpu##_cpu_##_pri##_pri_##_isr(void) { _isr_(__VA_ARGS__); } \
-  IFX_INTERRUPT(cpu##_cpu_##_pri##_pri_##_isr, _cpu_, _pri_);
+  IFX_INTERRUPT(cpu##_cpu_##_pri##_pri_##_isr, _cpu_, _pri_)
 
 #endif /* IFX_ISR_H */
