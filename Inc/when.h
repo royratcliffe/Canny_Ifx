@@ -33,11 +33,7 @@
  * with the END_OF_WHEN macro to delineate the section.
  * \param _when_ The name of the event for which the section is defined.
  */
-#if defined(__TASKING__)
-#define START_OF_WHEN(_when_) _lc_gb_when_##_when_
-#elif defined(__GNUC__)
 #define START_OF_WHEN(_when_) START_OF_SECTION(when_##_when_)
-#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief End of when section.
@@ -46,11 +42,7 @@
  * with the START_OF_WHEN macro to delineate the section.
  * \param _when_ The name of the event for which the section is defined.
  */
-#if defined(__TASKING__)
-#define END_OF_WHEN(_when_) _lc_ge_when_##_when_
-#elif defined(__GNUC__)
 #define END_OF_WHEN(_when_) END_OF_SECTION(when_##_when_)
-#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief When section extern declarations.
@@ -81,9 +73,36 @@
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
+#if defined(__TASKING__)
+/*
+ * The TASKING compiler concatenates the section name with the function name to
+ * create a unique section for each callback, but it does not adjust the section
+ * end marker (_lc_ue_) to account for multiple callbacks in the same section.
+ *
+ * Use the same section name for all callbacks of the same event, and rely on
+ * the linker to place them contiguously in memory. The CAUSES macro defines a
+ * function with the specified name and places it in the appropriate section,
+ * allowing multiple callbacks for the same event to be registered without
+ * conflicts. The OCCURS macro then iterates over all callbacks in that section
+ * when the event occurs, ensuring that all registered functions are called.
+ *
+ * The .sdecl directive is used to declare the section in assembly language, and
+ * the .word directive is used to place the address of the callback function in
+ * the section; the .sect directive is used to select the section. The
+ * __attribute__((used)) ensures that the function is not optimised away by the
+ * compiler, even if it appears to be unused in the code.
+ */
+#define CAUSES(_when_, _what_)                               \
+  static void _what_(void *with, ...) __attribute__((used)); \
+  __asm(".sdecl\t'" #_when_ "',data,rom,concat,protect\n\
+\t.sect\t'" #_when_ "'\n\
+\t.align\t4\n\
+\t.word\t" #_what_)
+#elif defined(__GNUC__)
 #define CAUSES(_when_, _what_)         \
   static void _what_(void *with, ...); \
   SECTION_USED(when_##_when_) static void (*const __when__##_what_)(void *with, ...) = &_what_
+#endif /* __TASKING__ || __GNUC__ */
 
 /*!
  * \brief When something happened, do something with it.
