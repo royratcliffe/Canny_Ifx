@@ -70,6 +70,16 @@
  * occurs. It is used to register a callback function that will be executed when
  * the specified event occurs. The function is placed in a specific section of
  * the binary, allowing it to be discovered and executed at runtime.
+ *
+ * By design, the macro requires a semicolon at the end of the CAUSES macro
+ * invocation to ensure that the function definition is correctly terminated and
+ * to allow for multiple invocations of the CAUSES macro without syntax errors.
+ * This design choice allows for a clean and consistent way to register multiple
+ * callbacks for the same event without needing to worry about the underlying
+ * section management, as the linker will handle the placement of the functions
+ * in memory. The semicolon also helps to visually separate different callback
+ * registrations in the code, improving readability.
+ *
  * \param _when_ The name of the event that triggers the callback.
  * \param _what_ The name of the function to be called when the event occurs.
  */
