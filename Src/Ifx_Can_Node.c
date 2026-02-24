@@ -1,7 +1,7 @@
 #include "Ifx_Can_Node.h"
 
 /*!
- * \brief Enables the Group Interrupt for a CAN node.
+ * \brief Enables a Group Interrupt for a CAN node.
  * \param config Pointer to the group interrupt configuration.
  * \param prio Priority of the interrupt.
  * \param line Interrupt line.
