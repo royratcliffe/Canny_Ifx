@@ -1,5 +1,12 @@
 #include "Ifx_Can_Node.h"
 
+/*!
+ * \brief Enables the Group Interrupt for a CAN node.
+ * \param config Pointer to the group interrupt configuration.
+ * \param prio Priority of the interrupt.
+ * \param line Interrupt line.
+ * \param tos Type of service.
+ */
 static void Ifx_Can_Node_enableGroupInterrupt(IfxCan_GroupInterruptConfig *config, Ifx_Priority prio, IfxCan_InterruptLine line, IfxSrc_Tos tos);
 
 void Ifx_Can_Node_enableReint(IfxCan_Can_NodeConfig *config, Ifx_Priority prio, IfxCan_InterruptLine line, IfxSrc_Tos tos) {
