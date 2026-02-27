@@ -5,8 +5,8 @@
  * The alert urgency levels indicate the severity of an alert and guide the appropriate response.
  */
 
-#ifndef ALERT_H
-#define ALERT_H
+#ifndef ALERT_H_
+#define ALERT_H_
 
 /*!
  * \brief Alert urgency levels.
@@ -20,4 +20,4 @@
  */
 enum Alert_urgency { Alert_urgency_memo, Alert_urgency_advisory, Alert_urgency_caution, Alert_urgency_warning };
 
-#endif /* ALERT_H */
+#endif /* ALERT_H_ */
