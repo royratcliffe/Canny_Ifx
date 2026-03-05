@@ -104,8 +104,8 @@
  */
 #define CAUSES(_when_, _what_)                               \
   static void _what_(void *with, ...) __attribute__((used)); \
-  __asm(".sdecl\t'" #_when_ "',data,rom,concat,protect\n\
-\t.sect\t'" #_when_ "'\n\
+  __asm(".sdecl\t'when_" #_when_ "',data,rom,concat,protect\n\
+\t.sect\t'when_" #_when_ "'\n\
 \t.align\t4\n\
 \t.word\t" #_what_)
 #elif defined(__GNUC__)
