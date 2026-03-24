@@ -39,8 +39,15 @@
  *
  * \param x The token or value to be converted to a string literal.
  */
-#ifndef STRINGIFY
 #define STRINGIFY(x) #x
-#endif
+
+/*!
+ * \brief Expands the macro argument and then converts it into a string literal.
+ * \details This macro first expands its argument if it is a macro itself,
+ * and then converts the result into a string literal. This is useful when
+ * you want to stringify the value of a macro rather than the macro name.
+ * \param x The token or value to be expanded and then converted to a string literal.
+ */
+#define XSTRINGIFY(x) STRINGIFY(x)
 
 #endif /* CANNY_IFX_STRINGIFY_H_ */

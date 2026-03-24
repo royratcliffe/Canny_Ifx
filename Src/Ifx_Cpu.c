@@ -30,6 +30,8 @@
  */
 #ifdef __TASKING__
 #define IFX_CLONE __clone
+#else
+#define IFX_CLONE
 #endif /* __TASKING__ */
 
 Ifx_CPU *IfxCpu_getCoreAddress(void) {
